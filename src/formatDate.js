@@ -29,7 +29,9 @@ function formatDate(date, fromFormat, toFormat) {
       const year = slovar['YYYY'];
       const shortYear = parseInt(year, 10) % 100;
 
-      const formattedYear = shortYear < 30 ? '20' + shortYear : '19' + shortYear;
+      const formattedYear =
+        shortYear < 30 ? '20' + shortYear : '19' + shortYear;
+
       newDate += formattedYear;
     }
 
