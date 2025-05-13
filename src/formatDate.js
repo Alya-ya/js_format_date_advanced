@@ -8,39 +8,40 @@
  * @returns {string}
  */
 function formatDate(date, fromFormat, toFormat) {
-  // write code here
-  const separator = toFormat[3];
-  const part = date.split(fromFormat[3]);
-  const slovar = {
-    YYYY: part[0],
-    MM: part[1],
-    DD: part[2],
-  };
-  let newDate = '';
+  const separatorFrom = fromFormat[3];
+  const separatorTo = toFormat[3];
 
-  for (let i = 0; i < toFormat.length; i++) {
-    if (toFormat[i] === 'DD') {
-      newDate += slovar['DD'];
-    } else if (toFormat[i] === 'MM') {
-      newDate += slovar['MM'];
-    } else if (toFormat[i] === 'YYYY') {
-      newDate += slovar['YYYY'];
-    } else if (toFormat[i] === 'YY') {
-      const year = slovar['YYYY'];
-      const shortYear = parseInt(year, 10) % 100;
+  const dateParts = date.split(separatorFrom);
+  const fromParts = fromFormat.slice(0, 3);
+  const toParts = toFormat.slice(0, 3);
 
-      const formattedYear =
-        shortYear < 30 ? '20' + shortYear : '19' + shortYear;
+  const dateObj = {};
 
-      newDate += formattedYear;
+  fromParts.forEach((part, index) => {
+    const value = dateParts[index];
+
+    if (part === 'YY') {
+      const year = +value;
+      const paddedYY = value.padStart(2, '0');
+      let fullYear;
+
+      if (year < 30) {
+        fullYear = '20' + paddedYY;
+      } else {
+        fullYear = '19' + paddedYY;
+      }
+
+      dateObj['YY'] = paddedYY;
+      dateObj['YYYY'] = fullYear;
+    } else if (part === 'YYYY') {
+      dateObj['YYYY'] = value;
+      dateObj['YY'] = value.slice(-2);
+    } else {
+      dateObj[part] = value;
     }
+  });
 
-    if (i < toFormat.length - 1) {
-      newDate += separator;
-    }
-  }
-
-  return newDate;
+  return toParts.map((part) => dateObj[part]).join(separatorTo);
 }
 
 module.exports = formatDate;
